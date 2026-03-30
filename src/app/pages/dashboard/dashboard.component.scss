@@ -207,3 +207,67 @@
   font-size: 11px;
   color: var(--luka-muted);
 }
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  display: flex; align-items: flex-end; justify-content: center;
+  z-index: 100;
+}
+
+.modal {
+  width: 100%; max-width: 430px;
+  background: var(--luka-card);
+  border: 1px solid var(--luka-border);
+  border-radius: 24px 24px 0 0;
+  padding: 24px 20px 40px;
+  h3 { font-size: 16px; font-weight: 500; margin-bottom: 4px; }
+}
+
+.modal-hint {
+  font-size: 11px;
+  color: var(--luka-muted);
+  margin-bottom: 20px;
+}
+
+.form-group {
+  margin-bottom: 14px;
+  label { display: block; font-size: 13px; color: var(--luka-muted); margin-bottom: 6px; }
+  input {
+    width: 100%;
+    background: var(--luka-surface);
+    border: 1px solid var(--luka-border);
+    border-radius: 10px;
+    padding: 10px 14px;
+    color: var(--luka-text);
+    font-size: 14px;
+    &:focus { border-color: var(--luka-accent-light); }
+    &::placeholder { color: var(--luka-subtle); }
+  }
+}
+
+.modal-actions {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.btn-cancel {
+  background: var(--luka-surface);
+  color: var(--luka-muted);
+  border: 1px solid var(--luka-border);
+  border-radius: 10px;
+  padding: 12px;
+  font-size: 14px;
+}
+
+.btn-confirm {
+  border-radius: 10px;
+  padding: 12px;
+  font-size: 14px; font-weight: 500;
+  border: none;
+  &.deposit { background: var(--luka-accent); color: white; }
+  &:disabled { opacity: 0.5; cursor: not-allowed; }
+}

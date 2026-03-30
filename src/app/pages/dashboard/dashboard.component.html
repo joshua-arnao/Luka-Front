@@ -1,6 +1,11 @@
 <div class="dashboard">
   <div class="header">
-    <div>
+    <div
+      (click)="
+        tapCount = tapCount + 1;
+        tapCount >= 5 ? (showRechargeModal = true) : null
+      "
+    >
       <p class="greeting">{{ getGreeting() }},</p>
       <h1 class="username">{{ firstName }}</h1>
     </div>
@@ -231,5 +236,40 @@
       </svg>
       <span>Alertas</span>
     </button>
+  </div>
+</div>
+
+<div
+  class="modal-overlay"
+  *ngIf="showRechargeModal"
+  (click)="showRechargeModal = false"
+>
+  <div class="modal" (click)="$event.stopPropagation()">
+    <h3>Recargar saldo</h3>
+    <p class="modal-hint">Toca el saludo 5 veces para acceder</p>
+    <div class="form-group">
+      <label>Monto (S/)</label>
+      <input
+        type="number"
+        [(ngModel)]="rechargeAmount"
+        placeholder="0.00"
+        min="0.01"
+      />
+    </div>
+    <div class="modal-actions">
+      <button
+        class="btn-cancel"
+        (click)="showRechargeModal = false; tapCount = 0"
+      >
+        Cancelar
+      </button>
+      <button
+        class="btn-confirm deposit"
+        (click)="recharge()"
+        [disabled]="!rechargeAmount"
+      >
+        Recargar
+      </button>
+    </div>
   </div>
 </div>

@@ -9,11 +9,12 @@ import { WalletResponse } from '../../core/models/wallet.model';
 import { TransactionResponse } from '../../core/models/transaction.model';
 import { NotificationResponse } from '../../core/models/notification.model';
 import { SavingService } from '../../core/services/saving.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
 })
@@ -26,6 +27,10 @@ export class DashboardComponent implements OnInit {
   unreadCount = 0;
   loading = true;
   goals: any[] = [];
+  showRechargeModal = false;
+  rechargeAmount = 0;
+  tapCount = 0;
+  error = '';
 
   constructor(
     private authService: AuthService,
@@ -96,5 +101,23 @@ export class DashboardComponent implements OnInit {
   getProgress(current: number, target: number): number {
     if (!target) return 0;
     return Math.min(Math.round((current / target) * 100), 100);
+  }
+
+  recharge(): void {
+    if (!this.wallet || !this.rechargeAmount) return;
+    this.walletService
+      .receiveMoney(this.wallet.walletId, this.rechargeAmount)
+      .subscribe({
+        next: (wallet) => {
+          this.wallet = wallet;
+          this.showRechargeModal = false;
+          this.rechargeAmount = 0;
+          this.tapCount = 0;
+        },
+        error: () => {
+          this.error = 'Error al recargar.';
+          setTimeout(() => (this.error = ''), 3000);
+        },
+      });
   }
 }
