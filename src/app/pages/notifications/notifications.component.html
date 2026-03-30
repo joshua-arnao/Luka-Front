@@ -1,0 +1,47 @@
+<div class="page">
+  <div class="page-header">
+    <button class="back-btn" (click)="goBack()">
+      <svg
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <polyline points="15 18 9 12 15 6" />
+      </svg>
+    </button>
+    <h1>Notificaciones</h1>
+    <div style="width: 38px"></div>
+  </div>
+
+  <div class="content">
+    <div class="loading" *ngIf="loading">Cargando...</div>
+
+    <div class="empty" *ngIf="!loading && notifications.length === 0">
+      No tienes notificaciones aún
+    </div>
+
+    <div class="notif-list" *ngIf="!loading">
+      <div
+        class="notif-item"
+        *ngFor="let notif of notifications"
+        [class.unread]="!notif.read"
+        (click)="markAsRead(notif)"
+      >
+        <div class="notif-icon" [ngClass]="getIconClass(notif.type)">
+          {{ getIcon(notif.type) }}
+        </div>
+        <div class="notif-info">
+          <p class="notif-title">{{ notif.title }}</p>
+          <p class="notif-desc">{{ notif.description }}</p>
+          <p class="notif-date">
+            {{ notif.createdAt | date: "dd MMM, HH:mm" }}
+          </p>
+        </div>
+        <div class="unread-dot" *ngIf="!notif.read"></div>
+      </div>
+    </div>
+  </div>
+</div>

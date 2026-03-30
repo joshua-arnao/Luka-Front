@@ -1,0 +1,46 @@
+<div class="login-wrapper">
+  <div class="login-card">
+    <div class="logo">
+      <span class="logo-icon">₿</span>
+      <span class="logo-text">LUKA</span>
+    </div>
+
+    <h1>Bienvenido de vuelta</h1>
+    <p class="subtitle">Ingresa a tu billetera digital</p>
+
+    <div class="error-msg" *ngIf="error">{{ error }}</div>
+
+    <form (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label>Correo electrónico</label>
+        <input
+          type="email"
+          [(ngModel)]="request.email"
+          name="email"
+          placeholder="tu@email.com"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label>Contraseña</label>
+        <input
+          type="password"
+          [(ngModel)]="request.password"
+          name="password"
+          placeholder="••••••••"
+          required
+        />
+      </div>
+
+      <button type="submit" class="btn-primary" [disabled]="loading">
+        {{ loading ? "Ingresando..." : "Ingresar" }}
+      </button>
+    </form>
+
+    <p class="register-link">
+      ¿No tienes cuenta?
+      <a routerLink="/register">Regístrate aquí</a>
+    </p>
+  </div>
+</div>

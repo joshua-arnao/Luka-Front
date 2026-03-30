@@ -1,1 +1,44 @@
 /* You can add global styles to this file, and also import other style files */
+:root {
+  --luka-bg:           #0a0a0f;
+  --luka-surface:      #13131a;
+  --luka-card:         #1a1a24;
+  --luka-border:       rgba(255,255,255,0.08);
+  --luka-accent:       #7C3AED;
+  --luka-accent-light: #8B5CF6;
+  --luka-accent-hover: #6D28D9;
+  --luka-green:        #10B981;
+  --luka-red:          #EF4444;
+  --luka-yellow:       #F59E0B;
+  --luka-blue:         #3B82F6;
+  --luka-text:         #F9FAFB;
+  --luka-muted:        #6B7280;
+  --luka-subtle:       #374151;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--luka-bg);
+  color: var(--luka-text);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  min-height: 100vh;
+}
+
+a { text-decoration: none; color: inherit; }
+
+button {
+  cursor: pointer;
+  border: none;
+  outline: none;
+  font-family: inherit;
+}
+
+input {
+  font-family: inherit;
+  outline: none;
+}

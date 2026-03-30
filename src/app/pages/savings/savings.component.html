@@ -1,0 +1,281 @@
+<div class="page">
+  <div class="page-header">
+    <button class="back-btn" (click)="goBack()">
+      <svg
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <polyline points="15 18 9 12 15 6" />
+      </svg>
+    </button>
+    <h1>Ahorros</h1>
+    <button class="add-btn" (click)="showCreateForm = !showCreateForm">
+      <svg
+        *ngIf="!showCreateForm"
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <line x1="12" y1="5" x2="12" y2="19" />
+        <line x1="5" y1="12" x2="19" y2="12" />
+      </svg>
+      <svg
+        *ngIf="showCreateForm"
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+      >
+        <line x1="18" y1="6" x2="6" y2="18" />
+        <line x1="6" y1="6" x2="18" y2="18" />
+      </svg>
+    </button>
+  </div>
+
+  <div class="content">
+    <div class="success-msg" *ngIf="success">{{ success }}</div>
+    <div class="error-msg" *ngIf="error">{{ error }}</div>
+
+    <div class="create-form" *ngIf="showCreateForm">
+      <h3>Nuevo objetivo de ahorro</h3>
+
+      <div class="form-group">
+        <label>Nombre</label>
+        <input
+          type="text"
+          [(ngModel)]="newGoal.name"
+          placeholder="Ej: Viaje a Cusco"
+        />
+      </div>
+
+      <div class="form-group">
+        <label>Descripción</label>
+        <input
+          type="text"
+          [(ngModel)]="newGoal.description"
+          placeholder="Descripción opcional"
+        />
+      </div>
+
+      <div class="form-group">
+        <label>Meta total (S/)</label>
+        <input
+          type="number"
+          [(ngModel)]="newGoal.targetAmount"
+          placeholder="0.00"
+        />
+      </div>
+
+      <div class="rule-section">
+        <p class="rule-title">Regla de ahorro automático</p>
+        <div class="rule-options">
+          <div
+            class="rule-option"
+            [class.selected]="newRule.type === 'PERCENTAGE'"
+            (click)="newRule.type = 'PERCENTAGE'"
+          >
+            <span
+              class="rule-icon"
+              style="background: rgba(124, 58, 237, 0.2); color: #8b5cf6"
+              >%</span
+            >
+            <div>
+              <p class="rule-name">Porcentaje</p>
+              <p class="rule-desc">Ahorra % de cada pago</p>
+            </div>
+          </div>
+          <div
+            class="rule-option"
+            [class.selected]="newRule.type === 'ROUNDUP'"
+            (click)="newRule.type = 'ROUNDUP'"
+          >
+            <span
+              class="rule-icon"
+              style="background: rgba(16, 185, 129, 0.2); color: #10b981"
+              >↑</span
+            >
+            <div>
+              <p class="rule-name">Redondeo</p>
+              <p class="rule-desc">Redondea cada pago</p>
+            </div>
+          </div>
+          <div
+            class="rule-option"
+            [class.selected]="newRule.type === 'SCHEDULED'"
+            (click)="newRule.type = 'SCHEDULED'"
+          >
+            <span
+              class="rule-icon"
+              style="background: rgba(245, 158, 11, 0.2); color: #f59e0b"
+              >⏰</span
+            >
+            <div>
+              <p class="rule-name">Programado</p>
+              <p class="rule-desc">Monto fijo periódico</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="rule-config" *ngIf="newRule.type === 'PERCENTAGE'">
+          <label>Porcentaje a ahorrar (%)</label>
+          <input
+            type="number"
+            [(ngModel)]="newRule.percentage"
+            placeholder="Ej: 10"
+            min="1"
+            max="100"
+          />
+        </div>
+
+        <div class="rule-config" *ngIf="newRule.type === 'SCHEDULED'">
+          <label>Monto a ahorrar por período (S/)</label>
+          <input
+            type="number"
+            [(ngModel)]="newRule.amount"
+            placeholder="Ej: 50.00"
+            min="0.01"
+          />
+
+          <label style="margin-top: 12px">Frecuencia</label>
+          <div class="frequency-options">
+            <div
+              class="freq-option"
+              [class.selected]="newRule.frequency === 'WEEKLY'"
+              (click)="newRule.frequency = 'WEEKLY'"
+            >
+              Semanal
+            </div>
+            <div
+              class="freq-option"
+              [class.selected]="newRule.frequency === 'BIWEEKLY'"
+              (click)="newRule.frequency = 'BIWEEKLY'"
+            >
+              Quincenal
+            </div>
+            <div
+              class="freq-option"
+              [class.selected]="newRule.frequency === 'MONTHLY'"
+              (click)="newRule.frequency = 'MONTHLY'"
+            >
+              Mensual
+            </div>
+          </div>
+        </div>
+
+        <p class="rule-hint" *ngIf="newRule.type === 'ROUNDUP'">
+          Cada transferencia se redondeará al siguiente entero y la diferencia
+          irá a este objetivo.
+        </p>
+      </div>
+
+      <button class="btn-primary" (click)="createGoal()" [disabled]="creating">
+        {{ creating ? "Creando..." : "Crear objetivo" }}
+      </button>
+    </div>
+
+    <div class="loading" *ngIf="loading">Cargando...</div>
+
+    <div class="empty" *ngIf="!loading && goals.length === 0">
+      No tienes objetivos de ahorro aún
+    </div>
+
+    <div class="goals-list" *ngIf="!loading && !showCreateForm">
+      <div class="goal-card" *ngFor="let goal of goals">
+        <div class="goal-header">
+          <div>
+            <p class="goal-name">{{ goal.name }}</p>
+            <p class="goal-desc">{{ goal.description }}</p>
+          </div>
+          <span class="goal-pct"
+            >{{ getProgress(goal.currentAmount, goal.targetAmount) }}%</span
+          >
+        </div>
+
+        <div class="progress-bg">
+          <div
+            class="progress-fill"
+            [style.width.%]="getProgress(goal.currentAmount, goal.targetAmount)"
+          ></div>
+        </div>
+
+        <div class="goal-amounts">
+          <span>S/ {{ goal.currentAmount | number: "1.2-2" }} ahorrados</span>
+          <span>Meta: S/ {{ goal.targetAmount | number: "1.2-2" }}</span>
+        </div>
+
+        <div class="goal-actions">
+          <button class="btn-deposit" (click)="openModal(goal, 'deposit')">
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <line x1="12" y1="5" x2="12" y2="19" />
+              <line x1="5" y1="12" x2="19" y2="12" />
+            </svg>
+            Depositar
+          </button>
+          <button class="btn-withdraw" (click)="openModal(goal, 'withdraw')">
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <line x1="5" y1="12" x2="19" y2="12" />
+            </svg>
+            Retirar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
+  <div class="modal" (click)="$event.stopPropagation()">
+    <h3>
+      {{ modalType === "deposit" ? "Depositar en" : "Retirar de" }}
+      {{ selectedGoal?.name }}
+    </h3>
+    <p class="modal-balance">
+      Disponible en cajita: S/
+      {{ selectedGoal?.currentAmount | number: "1.2-2" }}
+    </p>
+    <div class="form-group">
+      <label>Monto (S/)</label>
+      <input
+        type="number"
+        [(ngModel)]="modalAmount"
+        placeholder="0.00"
+        min="0.01"
+      />
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" (click)="closeModal()">Cancelar</button>
+      <button
+        class="btn-confirm"
+        [class.deposit]="modalType === 'deposit'"
+        [class.withdraw]="modalType === 'withdraw'"
+        (click)="confirmModal()"
+        [disabled]="!modalAmount"
+      >
+        Confirmar
+      </button>
+    </div>
+  </div>
+</div>
